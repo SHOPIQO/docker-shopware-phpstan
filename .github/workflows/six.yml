@@ -72,6 +72,8 @@ jobs:
 
     - name: Download Shopware v${{ matrix.shopware-versions }}
       run: |
+        whoami
+
         docker run \
           --rm \
           -t \
@@ -79,7 +81,7 @@ jobs:
           -u "$(id -u):$(id -g)" \
           --workdir /app \
           -v ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}:/app \
-          webdevops/php:${{ matrix.php-versions }} \
+          webdevops/php:${{ matrix.php-versions }}-alpine \
             composer \
             create-project \
               --ignore-platform-reqs \

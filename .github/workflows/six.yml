@@ -86,6 +86,7 @@ jobs:
               --no-plugins \
               --no-cache \
               shopware/production:${{ matrix.shopware-versions }} /app \
+        && chown -vR ${UID}:${UID} $(pwd) \
         && cd shopware-${{ matrix.shopware-versions }} \
         && git init
 

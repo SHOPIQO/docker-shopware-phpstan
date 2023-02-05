@@ -76,7 +76,7 @@ jobs:
           --rm \
           -t \
           --workdir /app \
-          -v ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}:/app \
+          -v ./shopware-${{ matrix.shopware-versions }}:/app \
           composer:2 \
             create-project \
               --ignore-platform-reqs \
@@ -87,7 +87,7 @@ jobs:
               --no-cache \
               shopware/production:${{ matrix.shopware-versions }} /app
 
-        cd ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}
+        cd ./shopware-${{ matrix.shopware-versions }}
 
         git init
 
@@ -107,7 +107,7 @@ jobs:
       run: |
         docker run \
           --rm \
-          -v ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}:/src \
+          -v ./shopware-${{ matrix.shopware-versions }}:/src \
           ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
 
     - name: Build and push

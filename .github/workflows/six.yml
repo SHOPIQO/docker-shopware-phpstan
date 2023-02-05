@@ -97,6 +97,7 @@ jobs:
     - name: Initialize new git repository
       run: |
         ls -lah ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
+        sudo chown -R runner:docker ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
         cd ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
         git init
 

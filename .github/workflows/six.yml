@@ -72,14 +72,14 @@ jobs:
 
     - uses: php-actions/composer@v6
       with:
-        command: >
-          composer create-project
-            --ignore-platform-reqs
-            --no-interaction
-            --no-scripts
-            --no-progress
-            --no-plugins
-            --no-cache
+        command: |
+          create-project \
+            --ignore-platform-reqs \
+            --no-interaction \
+            --no-scripts \
+            --no-progress \
+            --no-plugins \
+            --no-cache \
             shopware/production:${{ matrix.shopware-versions }} ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}
 
     - name: Prepare test

@@ -76,7 +76,7 @@ jobs:
           --rm \
           -t \
           --workdir /app \
-          -v ./shopware-${{ matrix.shopware-versions }}:/app \
+          -v ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}:/app \
           composer:2 \
             create-project \
               --ignore-platform-reqs \
@@ -87,27 +87,16 @@ jobs:
               --no-cache \
               shopware/production:${{ matrix.shopware-versions }} /app
 
-        cd ./shopware-${{ matrix.shopware-versions }}
-
+    - name: Initialize new git repository
+      run: |
+        cd ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
         git init
-
-    # - uses: php-actions/composer@v6
-    #   with:
-    #     command: |
-    #       create-project \
-    #         --ignore-platform-reqs \
-    #         --no-interaction \
-    #         --no-scripts \
-    #         --no-progress \
-    #         --no-plugins \
-    #         --no-cache \
-    #         shopware/production:${{ matrix.shopware-versions }} ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}
 
     - name: Test image ${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
       run: |
         docker run \
           --rm \
-          -v ./shopware-${{ matrix.shopware-versions }}:/src \
+          -v ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}:/src \
           ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
 
     - name: Build and push

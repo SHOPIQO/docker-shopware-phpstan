@@ -1,0 +1,106 @@
+---
+# - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+# - https://docs.docker.com/build/ci/github-actions/examples/
+# - https://docs.github.com/en/actions/learn-github-actions/variables
+# - https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+# - https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+name: Build and publish Docker image for Shopware 6
+
+on:
+  push:
+    paths:
+      - 'six/Dockerfile'
+      - 'six/entrypoint.sh'
+      - .github/**/*.yml
+    # tags: [ "v[0-9]+*" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 15
+      fail-fast: false
+      matrix:
+        php-versions: [
+          # '7.4',
+          '8.0'
+        ]
+        shopware-versions: [
+          '6.4.0.0',
+          '6.4.1.0',
+          '6.4.2.0',
+          '6.4.3.0',
+          '6.4.4.0',
+          '6.4.5.0',
+          '6.4.6.0',
+          '6.4.7.0',
+          '6.4.8.0',
+          '6.4.9.0',
+          '6.4.10.0',
+          '6.4.11.0',
+          '6.4.12.0',
+          '6.4.13.0',
+          '6.4.14.0',
+          '6.4.15.0',
+          '6.4.15.1',
+          '6.4.16.0',
+          '6.4.17.0'
+        ]
+    name: Shopware v${{ matrix.shopware-versions }} on PHP ${{ matrix.php-versions }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and export to Docker
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        load: true
+        tags: |
+          ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
+
+    - name: Prepare test
+      run: |
+        docker run \
+          --rm \
+          -t \
+          --workdir /app \
+          -v $(pwd)/shopware-v${{ matrix.shopware-versions }}:/app \
+          composer:2 \
+            create-project \
+              --ignore-platform-reqs \
+              --no-interaction \
+              --no-scripts \
+              --no-progress \
+              --no-plugins \
+              --no-cache \
+              shopware/production:${{ matrix.shopware-versions }} /app
+
+    - name: Run test
+      run: |
+        docker run \
+          --rm \
+          -v $(pwd)/shopware-${{ matrix.shopware-versions }}:/src \
+          ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        # platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}
+        secrets: |
+          GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}

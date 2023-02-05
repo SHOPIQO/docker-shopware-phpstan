@@ -1,0 +1,69 @@
+---
+default_language_version:
+    python: python3
+
+default_stages: [commit, push]
+
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.0.1
+      hooks:
+          - id: mixed-line-ending
+            args: [--fix=lf]
+            description: Forces to replace line ending by the UNIX 'lf' character.
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.0.1
+      hooks:
+          - id: end-of-file-fixer
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.0.1
+      hooks:
+          - id: trailing-whitespace
+
+    - repo: local
+      hooks:
+          - id: dockerfilelint
+            name: dockerfilelint
+            language: docker_image
+            entry: ghcr.io/iermentraut/dockerfilelint
+            types: [file]
+            files: (d|D)ockerfile
+
+    - repo: local
+      hooks:
+          - id: hadolint
+            name: hadolint
+            description: Runs hadolint Docker image to lint Dockerfiles
+            language: docker_image
+            entry: ghcr.io/hadolint/hadolint:v2.8.0-alpine
+            args: [hadolint]
+            types: ["dockerfile"]
+
+    - repo: https://github.com/igorshubovych/markdownlint-cli
+      rev: v0.29.0
+      hooks:
+          - id: markdownlint
+
+    - repo: local
+      hooks:
+          - id: secretlint
+            name: secretlint
+            language: docker_image
+            entry: secretlint/secretlint
+            args: ['secretlint', '**/*']
+
+    - repo: https://github.com/koalaman/shellcheck-precommit
+      rev: v0.7.2
+      hooks:
+        - id: shellcheck
+          args: ["--severity=warning"]
+          types: [shell]
+
+    # @TODO https://github.com/jessfraz/dockfmt
+
+    # - repo: https://github.com/iermentraut/shopware-ecs-docker
+    #   rev: v1.0.0
+    #   hooks:
+    #       - id: shopware-ecs-docker

@@ -76,7 +76,7 @@ jobs:
           --rm \
           -t \
           --workdir /app \
-          -v $(pwd)/shopware-v${{ matrix.shopware-versions }}:/app \
+          -v $(pwd)/shopware-${{ matrix.shopware-versions }}:/app \
           composer:2 \
             create-project \
               --ignore-platform-reqs \
@@ -85,7 +85,9 @@ jobs:
               --no-progress \
               --no-plugins \
               --no-cache \
-              shopware/production:${{ matrix.shopware-versions }} /app
+              shopware/production:${{ matrix.shopware-versions }} /app \
+        && cd shopware-${{ matrix.shopware-versions }} \
+        && git init
 
     - name: Run test
       run: |

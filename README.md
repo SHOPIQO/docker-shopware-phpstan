@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: phpstan
         name: phpstan
-        entry: ghcr.io/iermentraut/docker-phpstan-shopware:6.4.15.1-php8.0
+        entry: ghcr.io/SHOPIQO/docker-shopware-phpstan:6.4.15.0-php8.0
         language: docker_image
         types: [file, php]
         verbose: true

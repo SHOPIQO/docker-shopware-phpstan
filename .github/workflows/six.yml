@@ -92,8 +92,11 @@ jobs:
               --no-cache \
               shopware/production:${{ matrix.shopware-versions }} /app
 
+          ls -lah ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
+
     - name: Initialize new git repository
       run: |
+        ls -lah ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
         cd ${{ github.workspace }}/shopware-${{ matrix.shopware-versions }}
         git init
 

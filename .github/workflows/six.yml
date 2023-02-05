@@ -111,7 +111,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
-        context: .
+        context: ./six
         push: true
         tags: |
           ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}

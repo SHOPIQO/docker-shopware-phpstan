@@ -65,7 +65,7 @@ jobs:
     - name: Build and export to Docker
       uses: docker/build-push-action@v3
       with:
-        context: .
+        context: ./six
         load: true
         tags: |
           ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}

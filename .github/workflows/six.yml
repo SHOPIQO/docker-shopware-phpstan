@@ -9,9 +9,10 @@ name: Build and publish Docker image for Shopware 6
 on:
   push:
     paths:
+      - .github/workflows/six.yml
       - 'six/Dockerfile'
       - 'six/entrypoint.sh'
-      - .github/**/*.yml
+
     # tags: [ "v[0-9]+*" ]
 
 jobs:
@@ -19,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 15
-      fail-fast: false
+      fail-fast: true
       matrix:
         php-versions: [
-          # '7.4',
+          '7.4',
           '8.0'
         ]
         shopware-versions: [
@@ -42,7 +43,6 @@ jobs:
           '6.4.13.0',
           '6.4.14.0',
           '6.4.15.0',
-          '6.4.15.1',
           '6.4.16.0',
           '6.4.17.0'
         ]
@@ -98,7 +98,6 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        # platforms: linux/amd64,linux/arm64
         push: true
         tags: |
           ghcr.io/${{ github.repository }}:${{ matrix.shopware-versions }}-php${{ matrix.php-versions }}

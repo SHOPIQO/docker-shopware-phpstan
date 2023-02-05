@@ -80,11 +80,11 @@ jobs:
             --no-progress
             --no-plugins
             --no-cache
-            shopware/production:${{ matrix.shopware-versions }} $(pwd)/shopware-${{ matrix.shopware-versions }}
+            shopware/production:${{ matrix.shopware-versions }} ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}
 
     - name: Prepare test
       run: |
-        cd $(pwd)/shopware-${{ matrix.shopware-versions }}
+        cd ${{ env.GITHUB_WORKSPACE }}/shopware-${{ matrix.shopware-versions }}
         git init
     #     docker run \
     #       --rm \

@@ -31,13 +31,14 @@ else
     config="/home/application/shopware/phpstan.neon"
 fi
 
-if [ -z "$@" ]; then
+# @TODO: allow to pass arguments to phpstan
+# if [ -z "$@" ]; then
     /usr/local/bin/php \
         /home/application/shopware/dev-ops/analyze/vendor/bin/phpstan \
         analyze \
         -c $config -- /home/application/.staged_files
-else
-    /usr/local/bin/php \
-        /home/application/shopware/dev-ops/analyze/vendor/bin/phpstan \
-        "$@"
-fi
+# else
+#     /usr/local/bin/php \
+#         /home/application/shopware/dev-ops/analyze/vendor/bin/phpstan \
+#         "$@"
+# fi
